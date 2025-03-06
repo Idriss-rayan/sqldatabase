@@ -67,3 +67,23 @@ BEGIN
     END LOOP;
 END;
 /
+
+-- Function to Find the Movie Status (“Solo” or “Ensemble”)
+CREATE FUNCTION GetMovieStatus(movie_title VARCHAR(255)) RETURNS VARCHAR(10)
+DETERMINISTIC
+BEGIN
+    DECLARE actor_count INT;
+    
+    SELECT COUNT(*) INTO actor_count
+    FROM CASTS C
+    JOIN MOVIE M ON C.MOV_ID = M.MOV_ID
+    WHERE M.MOV_TITLE = movie_title;
+    
+    IF actor_count = 1 THEN
+        RETURN 'Solo';
+    ELSE
+        RETURN 'Ensemble';
+    END IF;
+END //
+
+DELIMITER ;
